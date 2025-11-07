@@ -360,6 +360,11 @@ body {
   z-index: 1;
 }
 
+/* Ensure the specific phrase is white */
+.feature-visual .visual-text {
+  color: var(--white);
+}
+
 /* Aprende - Lista Moderna */
 #aprende {
   background: linear-gradient(180deg, #e2e8f0 0%, #f8fafc 100%);
