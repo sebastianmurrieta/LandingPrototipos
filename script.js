@@ -42,23 +42,84 @@ submitQuiz.addEventListener('click', () => {
 
   quizResult.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-  if (score > 50) {
+  if (score >= 60) {
     quizResult.className = 'result danger';
     quizResult.innerHTML = `
-          <div style="font-size: 3em; margin-bottom: 15px;">🔴</div>
-          <div style="font-size: 1.5em; margin-bottom: 15px;">Tu nivel de riesgo es ALTO</div>
-          <div style="font-size: 2em; font-weight: 800; margin-bottom: 20px;">${score.toFixed(0)}%</div>
-          <p style="font-size: 1.1em; font-weight: 500; margin-bottom: 25px;">Necesitas reforzar urgentemente tu seguridad digital para proteger tu información.</p>
-          <a href="#mision" class="btn cta-btn" style="display: inline-block;">💙 Quiero el Curso de Ciberseguridad</a>
-        `;
+      <div style="font-size: 3em; margin-bottom: 15px;">🔴</div>
+      <div style="font-size: 1.5em; margin-bottom: 15px;">¡ALERTA! Tu nivel de riesgo es CRÍTICO</div>
+      <div style="font-size: 2em; font-weight: 800; margin-bottom: 20px;">${score.toFixed(0)}% de riesgo</div>
+      <p style="font-size: 1.1em; font-weight: 500; margin-bottom: 25px;">Tus contraseñas están en peligro inminente. Es urgente que tomes acción AHORA para proteger tus cuentas.</p>
+      <a href="#solucion" class="btn" style="display: inline-block; text-decoration: none;">🛡️ Ver cómo protegerme YA</a>
+    `;
+  } else if (score >= 40) {
+    quizResult.className = 'result danger';
+    quizResult.innerHTML = `
+      <div style="font-size: 3em; margin-bottom: 15px;">🟠</div>
+      <div style="font-size: 1.5em; margin-bottom: 15px;">Tu nivel de riesgo es ALTO</div>
+      <div style="font-size: 2em; font-weight: 800; margin-bottom: 20px;">${score.toFixed(0)}% de riesgo</div>
+      <p style="font-size: 1.1em; font-weight: 500; margin-bottom: 25px;">Tienes vulnerabilidades importantes. Te recomendamos mejorar tu seguridad digital cuanto antes.</p>
+      <a href="#solucion" class="btn" style="display: inline-block; text-decoration: none;">🛡️ Ver cómo protegerme</a>
+    `;
+  } else if (score > 0) {
+    quizResult.className = 'result success';
+    quizResult.innerHTML = `
+      <div style="font-size: 3em; margin-bottom: 15px;">🟡</div>
+      <div style="font-size: 1.5em; margin-bottom: 15px;">Nivel de seguridad: MODERADO</div>
+      <div style="font-size: 2em; font-weight: 800; margin-bottom: 20px;">${score.toFixed(0)}% de riesgo</div>
+      <p style="font-size: 1.1em; font-weight: 500; margin-bottom: 25px;">Vas bien, pero aún hay espacio para mejorar. Refuerza algunos aspectos de tu seguridad.</p>
+      <a href="#ia" class="btn" style="display: inline-block; text-decoration: none;">🤖 Generar contraseña segura</a>
+    `;
   } else {
     quizResult.className = 'result success';
     quizResult.innerHTML = `
-          <div style="font-size: 3em; margin-bottom: 15px;">🟢</div>
-          <div style="font-size: 1.5em; margin-bottom: 15px;">¡Excelente! Tu nivel de seguridad es bueno</div>
-          <div style="font-size: 2em; font-weight: 800; margin-bottom: 20px;">${score.toFixed(0)}%</div>
-          <p style="font-size: 1.1em; font-weight: 500;">Sigue practicando buenos hábitos digitales y mantente actualizado sobre nuevas amenazas.</p>
-        `;
+      <div style="font-size: 3em; margin-bottom: 15px;">🟢</div>
+      <div style="font-size: 1.5em; margin-bottom: 15px;">¡EXCELENTE! Tu seguridad es ÓPTIMA</div>
+      <div style="font-size: 2em; font-weight: 800; margin-bottom: 20px;">0% de riesgo</div>
+      <p style="font-size: 1.1em; font-weight: 500;">¡Felicidades! Tienes excelentes prácticas de seguridad. Sigue así y mantente actualizado sobre nuevas amenazas.</p>
+    `;
+  }
+});
+
+// Generador de contraseñas con IA
+const genBtn = document.getElementById('genBtn');
+const generatedPassword = document.getElementById('generatedPassword');
+
+genBtn.addEventListener('click', () => {
+  genBtn.textContent = '⚙️ Generando...';
+  genBtn.disabled = true;
+  
+  // Simulación de generación de contraseña
+  setTimeout(() => {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
+    let password = '';
+    for (let i = 0; i < 16; i++) {
+      password += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    
+    generatedPassword.value = password;
+    genBtn.textContent = '⚙️ Generar Contraseña';
+    genBtn.disabled = false;
+    
+    // Añadir efecto visual
+    generatedPassword.style.animation = 'none';
+    setTimeout(() => {
+      generatedPassword.style.animation = 'fadeInUp 0.5s ease-out';
+    }, 10);
+  }, 800);
+});
+
+// Copiar contraseña al hacer clic en el input
+generatedPassword.addEventListener('click', () => {
+  if (generatedPassword.value) {
+    generatedPassword.select();
+    document.execCommand('copy');
+    
+    // Mostrar feedback visual
+    const originalPlaceholder = generatedPassword.placeholder;
+    generatedPassword.placeholder = '✅ ¡Copiado!';
+    setTimeout(() => {
+      generatedPassword.placeholder = originalPlaceholder;
+    }, 2000);
   }
 });
 
@@ -71,4 +132,22 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
       target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   });
+});
+
+// Animación del navbar al hacer scroll
+let lastScroll = 0;
+const navbar = document.querySelector('.navbar');
+
+window.addEventListener('scroll', () => {
+  const currentScroll = window.pageYOffset;
+  
+  if (currentScroll > 100) {
+    navbar.style.padding = '15px 0';
+    navbar.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.15)';
+  } else {
+    navbar.style.padding = '20px 0';
+    navbar.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.1)';
+  }
+  
+  lastScroll = currentScroll;
 });
